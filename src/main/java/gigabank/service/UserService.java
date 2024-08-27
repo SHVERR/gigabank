@@ -12,8 +12,9 @@ import java.util.List;
 public class UserService {
     private final List<User> users = new ArrayList<>();
 
-    public void addUser(User user) {
+    public User addUser(User user) {
         users.add(user);
+        return user;
     }
 
     public User getUserById(String id) {
