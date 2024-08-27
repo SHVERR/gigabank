@@ -4,8 +4,13 @@ import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
 import gigabank.entity.TransactionType;
 import gigabank.entity.User;
+homework-1
 import lombok.Data;
 import org.springframework.stereotype.Service;
+
+import lombok.Data;
+import org.springframework.stereotype.Service;
+master
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -21,6 +26,7 @@ import static gigabank.service.Utils.generateTransactionId;
 /**
  * Сервис отвечает за управление платежами и переводами
  */
+homework-1
 @Service
 @Data
 public class TransactionService {
@@ -57,6 +63,44 @@ public class TransactionService {
         transactions.removeIf(transaction -> transaction.getId().equals(id));
     }
 
+
+homework-1
+@Service
+@Data
+public class TransactionService {
+
+    public static final Set<String> TRANSACTION_CATEGORIES = Set.of(
+            "Health", "Beauty", "Education", "Deposit", "Transfer");
+
+    private final List<Transaction> transactions = new ArrayList<>();
+
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
+    }
+
+    public Transaction getTransactionById(String id) {
+        return transactions.stream()
+                .filter(transaction -> transaction.getId().equals(id))
+                .findAny()
+                .orElse(null);
+    }
+
+    public Transaction updateTransaction(String id, Transaction updatedTransaction) {
+        Transaction transactionToUpdate = getTransactionById(id);
+        transactionToUpdate.setId(updatedTransaction.getId());
+        transactionToUpdate.setValue(updatedTransaction.getValue());
+        transactionToUpdate.setType(updatedTransaction.getType());
+        transactionToUpdate.setCategory(updatedTransaction.getCategory());
+        transactionToUpdate.setBankAccount(updatedTransaction.getBankAccount());
+        transactionToUpdate.setCreatedDate(updatedTransaction.getCreatedDate());
+
+        return transactionToUpdate;
+    }
+
+    public void deleteTransaction(String id) {
+        transactions.removeIf(transaction -> transaction.getId().equals(id));
+    }
+master
     public boolean paymentTransaction(BankAccount bankAccount, Transaction transaction) {
         if (bankAccount == null || transaction == null
                 || bankAccount.getBalance().compareTo(transaction.getValue()) < 0
