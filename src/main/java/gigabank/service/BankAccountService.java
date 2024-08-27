@@ -4,7 +4,8 @@ import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
 import gigabank.entity.TransactionType;
 import gigabank.entity.User;
-import lombok.Getter;
+import lombok.Data;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -19,9 +20,36 @@ import static gigabank.service.Utils.*;
 /**
  * Сервис отвечает за управление счетами, включая создание, удаление и пополнение
  */
-@Getter
+@Service
+@Data
 public class BankAccountService {
     private final Map<User, List<BankAccount>> userAccounts = new HashMap<>();
+    private final List<BankAccount> bankAccounts = new ArrayList<>();
+
+    public void addBankAccount(BankAccount bankAccount) {
+        bankAccounts.add(bankAccount);
+    }
+
+    public BankAccount getBankAccountById(String id) {
+        return bankAccounts.stream()
+                .filter(bankAccount -> bankAccount.getId().equals(id))
+                .findAny()
+                .orElse(null);
+    }
+
+    public BankAccount updateBankAccount(String id, BankAccount updatedBankAccount) {
+        BankAccount bankAccountToUpdate = getBankAccountById(id);
+        bankAccountToUpdate.setId(updatedBankAccount.getId());
+        bankAccountToUpdate.setBalance(updatedBankAccount.getBalance());
+        bankAccountToUpdate.setOwner(updatedBankAccount.getOwner());
+        bankAccountToUpdate.setTransactions(updatedBankAccount.getTransactions());
+
+        return bankAccountToUpdate;
+    }
+
+    public void deleteBankAccount(String id) {
+        bankAccounts.removeIf(bankAccount -> bankAccount.getId().equals(id));
+    }
 
     public BankAccount addNewBankAccount(User user) {
         if (user == null) {

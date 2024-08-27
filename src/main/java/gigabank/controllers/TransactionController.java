@@ -1,25 +1,46 @@
 package gigabank.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import gigabank.entity.Transaction;
+import gigabank.service.TransactionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/transactions")
 public class TransactionController {
-    /*
+
+    private final TransactionService transactionService;
+
+    @Autowired
+    public TransactionController(TransactionService transactionService) {
+        this.transactionService = transactionService;
+    }
+
     @GetMapping
-    getTransactions() {}
+    public List<Transaction> getTransactions() {
+        return transactionService.getTransactions();
+    }
 
     @GetMapping("/{id}")
-    getTransaction(@PathVariable("id") String id) {}
+    public Transaction getTransaction(@PathVariable("id") String id) {
+        return transactionService.getTransactionById(id);
+    }
 
     @PostMapping
-    createTransaction() {}
+    public Transaction createTransaction(@RequestBody Transaction transaction) {
+        transactionService.addTransaction(transaction);
+        return transaction;
+    }
 
     @PatchMapping("/{id}")
-    updateTransaction(@PathVariable("id") String id) {}
+    public Transaction updateTransaction(@PathVariable("id") String id, @RequestBody Transaction transaction) {
+        return transactionService.updateTransaction(id, transaction);
+    }
 
     @DeleteMapping("/{id}")
-    deleteTransaction(@PathVariable("id") String id) {}
-    */
+    public void deleteTransaction(@PathVariable("id") String id) {
+        transactionService.deleteTransaction(id);
+    }
 }

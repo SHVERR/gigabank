@@ -11,8 +11,12 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
+    private final UserService userService;
+
     @Autowired
-    private UserService userService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<User> getUsers() {
@@ -25,16 +29,18 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser() {
-        userService.addUser (new User());
+    public User createUser(@RequestBody User user) {
+        userService.addUser(user);
+        return user;
     }
 
     @PatchMapping("/{id}")
-    updateUser(@PathVariable("id") String id) {
-
+    public User updateUser(@PathVariable("id") String id, @RequestBody User user) {
+        return userService.updateUser(id, user);
     }
 
     @DeleteMapping("/{id}")
-    deleteUser(@PathVariable("id") String id) {
+    public void deleteUser(@PathVariable("id") String id) {
+        userService.deleteUser(id);
     }
 }
