@@ -1,42 +1,75 @@
 package gigabank.service;
 
+import gigabank.dto.BankAccountDTO;
+import gigabank.dto.UserDTO;
+import gigabank.entity.BankAccount;
 import gigabank.entity.User;
+import gigabank.repository.BankAccountRepository;
+import gigabank.repository.UserRepository;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Data
+@RequiredArgsConstructor
 public class UserService {
-    private final List<User> users = new ArrayList<>();
+    private final UserRepository userRepository;
+    private final BankAccountRepository bankAccountRepository;
 
-    public User addUser(User user) {
-        users.add(user);
-        return user;
+    /**
+     * Получает список всех пользователей из Repository с их банковскими счетами
+     * и преобразует в DTO
+     */
+    public List<UserDTO> findAll() {
+        return userRepository.findAll().stream()
+                .map(user -> new UserDTO().toDTO(user))
+                .toList();
     }
 
-    public User getUserById(String id) {
-        return users.stream()
-                .filter(user -> user.getId().equals(id))
-                .findAny()
-                .orElse(null);
+    /**
+     * Предоставляет пользователя по его id из Repository с его банковскими счетами
+     * и преобразует в DTO
+     *
+     * @param id Пользователя
+     */
+    public UserDTO findById(long id) {
+        return new UserDTO().toDTO(userRepository.findById(id));
     }
 
-    public User updateUser(String id, User updatedUser) {
-        User userToUpdate = getUserById(id);
-        userToUpdate.setId(updatedUser.getId());
-        userToUpdate.setFirstName(updatedUser.getFirstName());
-        userToUpdate.setMiddleName(updatedUser.getMiddleName());
-        userToUpdate.setLastName(updatedUser.getLastName());
-        userToUpdate.setBirthDate(updatedUser.getBirthDate());
-        userToUpdate.setBankAccounts(updatedUser.getBankAccounts());
+    /**
+     * Добавляет нового Пользователя в Repository и создаёт ему Банковский счёт с нулевым балансом
+     *
+     * @param userDTO новый Пользователь из Controller
+     */
+    public long create(UserDTO userDTO) {
 
-        return userToUpdate;
+        User user = userDTO.toEntity(userDTO);
+        long newUserId = userRepository.save(user);
+        user.setId(newUserId);
+
+        BankAccount bankAccount = new BankAccount(
+                0,
+                new BigDecimal("0.00"),
+                user,
+                new ArrayList<>()
+        );
+
+        bankAccountRepository.save(bankAccount);
+
+        return newUserId;
     }
 
-    public void deleteUser(String id) {
-        users.removeIf(user -> user.getId().equals(id));
+    public void updateById(long id, UserDTO userDTO) {
+        userDTO.setId(id);
+        userRepository.updateById(userDTO.toEntity(userDTO));
+    }
+
+    public void deleteById(long id) {
+        userRepository.deleteById(id);
     }
 }

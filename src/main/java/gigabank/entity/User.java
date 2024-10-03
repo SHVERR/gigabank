@@ -1,10 +1,10 @@
 package gigabank.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -12,14 +12,15 @@ import java.util.List;
  */
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class User {
-    private String id;
+    private long id;
     private String firstName;
     private String middleName;
     private String lastName;
     private LocalDate birthDate;
     @EqualsAndHashCode.Exclude
-    private List<BankAccount> bankAccounts;
+    private List<BankAccount> bankAccounts = new ArrayList<>();
 
     @Override
     public String toString() {

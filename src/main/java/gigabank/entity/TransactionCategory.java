@@ -5,7 +5,7 @@ import lombok.RequiredArgsConstructor;
 
 @Data
 @RequiredArgsConstructor
-public class TransactionType {
+public class TransactionCategory {
     private long id;
     private String name;
 }
