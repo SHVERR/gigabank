@@ -1,7 +1,9 @@
 package gigabank.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -18,6 +20,7 @@ public class User {
     private String firstName;
     private String middleName;
     private String lastName;
+    private String phone;
     private LocalDate birthDate;
     @EqualsAndHashCode.Exclude
     private List<BankAccount> bankAccounts = new ArrayList<>();
@@ -29,6 +32,7 @@ public class User {
                 ", firstName='" + firstName + '\'' +
                 ", middleName='" + middleName + '\'' +
                 ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
                 ", birthDate=" + birthDate +
                 ", bankAccounts=" + bankAccounts +
                 '}';

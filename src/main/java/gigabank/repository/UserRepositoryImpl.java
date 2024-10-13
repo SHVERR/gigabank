@@ -23,7 +23,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public List<User> findAll() {
-        return jdbcTemplate.query("SELECT u.user_id, u.first_name, u.middle_name, u.last_name, u.birthdate, " +
+        return jdbcTemplate.query("SELECT u.user_id, u.first_name, u.middle_name, u.last_name, u.phone, u.birthdate, " +
                         "JSON_AGG(json_build_object('id', ba.bank_account_id, 'balance', ba.balance)) as bank_accounts " +
                         "FROM app_user u " +
                         "LEFT JOIN app_bank_account ba ON u.user_id = ba.owner_id " +
@@ -37,7 +37,7 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public User findById(long id) {
-        return jdbcTemplate.query("SELECT u.user_id, u.first_name, u.middle_name, u.last_name, u.birthdate, " +
+        return jdbcTemplate.query("SELECT u.user_id, u.first_name, u.middle_name, u.last_name, u.phone, u.birthdate, " +
                         "JSON_AGG(json_build_object('id', ba.bank_account_id, 'balance', ba.balance)) as bank_accounts " +
                         "FROM app_user u " +
                         "LEFT JOIN app_bank_account ba ON u.user_id = ba.owner_id " +
@@ -52,13 +52,14 @@ public class UserRepositoryImpl implements UserRepository {
 
         jdbcTemplate.update(con -> {
             PreparedStatement ps = con.prepareStatement(
-                    "INSERT INTO app_user (first_name, middle_name, last_name, birthdate) " +
-                            "VALUES (?, ?, ?, ?) RETURNING user_id",
+                    "INSERT INTO app_user (first_name, middle_name, last_name, phone, birthdate) " +
+                            "VALUES (?, ?, ?, ?, ?) RETURNING user_id",
                     Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getFirstName());
             ps.setString(2, user.getMiddleName());
             ps.setString(3, user.getLastName());
-            ps.setDate(4, Date.valueOf(user.getBirthDate()));
+            ps.setString(4, user.getPhone());
+            ps.setDate(5, Date.valueOf(user.getBirthDate()));
             return ps;
         }, keyHolder);
 
@@ -67,11 +68,12 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public void updateById(User user) {
-        jdbcTemplate.update("UPDATE app_user SET first_name=?, middle_name=?, last_name=?, birthdate=? " +
+        jdbcTemplate.update("UPDATE app_user SET first_name=?, middle_name=?, last_name=?, phone=?, birthdate=? " +
                         "WHERE user_id =?",
                 user.getFirstName(),
                 user.getMiddleName(),
                 user.getLastName(),
+                user.getPhone(),
                 user.getBirthDate(),
                 user.getId());
     }

@@ -1,8 +1,11 @@
 package gigabank.acceptancetest.contoller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gigabank.dto.BankAccountDTO;
 import gigabank.dto.UserDTO;
+import gigabank.entity.BankAccount;
 import gigabank.entity.User;
+import gigabank.service.BankAccountService;
 import gigabank.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 
@@ -22,17 +26,19 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 @SpringBootTest
 @AutoConfigureMockMvc
-class UserControllerTest {
+class BankAccountControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private UserService userService;
+    @Autowired
+    private BankAccountService bankAccountService;
 
     @Autowired
     ObjectMapper objectMapper;
 
     @Test
-    void testUserCRUD() throws Exception {
+    void testBankAccountCRUD() throws Exception {
 
         // Create
         UserDTO userDTO = new UserDTO(
@@ -53,38 +59,57 @@ class UserControllerTest {
                 .andReturn();
 
         long userId = objectMapper.readValue(resultUser.getResponse().getContentAsString(), Long.class);
-
         User user = userService.findById(userId);
-        assertEquals(user.getFirstName(), userDTO.getFirstName());
+
+        BankAccountDTO bankAccountDTO = new BankAccountDTO(
+                0,
+                new BigDecimal("12345.99"),
+                user.getId(),
+                new ArrayList<>());
+
+        String serializedBankAccountDTO = objectMapper.writeValueAsString(bankAccountDTO);
+
+        MvcResult resultBankAccount = mockMvc.perform(post("/bank_accounts")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(serializedBankAccountDTO))
+                .andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        long bankAccountId = Long.parseLong(resultBankAccount.getResponse().getContentAsString());
+
+        BankAccount bankAccount = bankAccountService.findById(bankAccountId);
+        assertEquals(bankAccount.getBalance(), bankAccountDTO.getBalance());
 
         // Read
-        MvcResult fetchResult = mockMvc.perform(get(String.format("/users/%s", userId)))
+        MvcResult fetchResult = mockMvc.perform(get(String.format("/bank_accounts/%s", bankAccountId)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        UserDTO fetched = objectMapper.readValue(fetchResult.getResponse().getContentAsString(), UserDTO.class);
-        assertEquals(fetched.getFirstName(), userDTO.getFirstName());
+        BankAccountDTO fetched = objectMapper.readValue(fetchResult.getResponse().getContentAsString(), BankAccountDTO.class);
+        assertEquals(fetched.getBalance(), bankAccountDTO.getBalance());
 
         // Update
-        userDTO.setFirstName("testName2");
-        serializedUserDTO = objectMapper.writeValueAsString(userDTO);
+        bankAccountDTO.setBalance(new BigDecimal("777.00"));
+        serializedBankAccountDTO = objectMapper.writeValueAsString(bankAccountDTO);
 
-        mockMvc.perform(patch((String.format("/users/%s", userId)))
+        mockMvc.perform(patch((String.format("/bank_accounts/%s", bankAccountId)))
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(serializedUserDTO))
+                        .content(serializedBankAccountDTO))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        user = userService.findById(userId);
-        assertEquals(user.getFirstName(), userDTO.getFirstName());
+        bankAccount = bankAccountService.findById(bankAccountId);
+        assertEquals(bankAccount.getBalance(), bankAccountDTO.getBalance());
 
         // Delete
-        mockMvc.perform(delete(String.format("/users/%s", userId)))
+        mockMvc.perform(delete(String.format("/bank_accounts/%s", bankAccountId)))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        userService.deleteById(userId);
+        bankAccountService.deleteById(bankAccountId);
 
-        assertNull(userService.findById(userId));
+        assertNull(bankAccountService.findById(bankAccountId));
+
+        userService.deleteById(userId);
     }
 }

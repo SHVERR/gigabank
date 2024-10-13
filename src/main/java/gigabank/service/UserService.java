@@ -23,35 +23,30 @@ public class UserService {
 
     /**
      * Получает список всех пользователей из Repository с их банковскими счетами
-     * и преобразует в DTO
      */
-    public List<UserDTO> findAll() {
-        return userRepository.findAll().stream()
-                .map(user -> new UserDTO().toDTO(user))
-                .toList();
+    public List<User> findAll() {
+        return userRepository.findAll();
     }
 
     /**
      * Предоставляет пользователя по его id из Repository с его банковскими счетами
-     * и преобразует в DTO
-     *
      * @param id Пользователя
      */
-    public UserDTO findById(long id) {
-        return new UserDTO().toDTO(userRepository.findById(id));
+    public User findById(long id) {
+        return userRepository.findById(id);
     }
 
     /**
      * Добавляет нового Пользователя в Repository и создаёт ему Банковский счёт с нулевым балансом
-     *
-     * @param userDTO новый Пользователь из Controller
+     * @param user новый Пользователь из Controller
      */
-    public long create(UserDTO userDTO) {
+    public long save (User user) {
 
-        User user = userDTO.toEntity(userDTO);
         long newUserId = userRepository.save(user);
         user.setId(newUserId);
 
+        // создаёт новомому Пользователю Банковский аккаунт
+        // ---------------------------
         BankAccount bankAccount = new BankAccount(
                 0,
                 new BigDecimal("0.00"),
@@ -60,13 +55,14 @@ public class UserService {
         );
 
         bankAccountRepository.save(bankAccount);
+        // ---------------------------
 
         return newUserId;
     }
 
-    public void updateById(long id, UserDTO userDTO) {
-        userDTO.setId(id);
-        userRepository.updateById(userDTO.toEntity(userDTO));
+    public void updateById(long id, User user) {
+        user.setId(id);
+        userRepository.updateById(user);
     }
 
     public void deleteById(long id) {

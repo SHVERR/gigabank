@@ -1,18 +1,15 @@
 package gigabank.service;
 
-import gigabank.dto.BankAccountDTO;
-import gigabank.dto.UserDTO;
 import gigabank.entity.BankAccount;
 import gigabank.entity.User;
+import gigabank.exception.UserNotFoundException;
 import gigabank.repository.BankAccountRepository;
+import gigabank.repository.UserRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Сервис отвечает за управление счетами, включая создание, удаление и пополнение
@@ -22,32 +19,30 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class BankAccountService {
     private final BankAccountRepository bankAccountRepository;
-    @Deprecated
-    private Map<User, List<BankAccount>> userAccounts = new HashMap<>();
-    @Deprecated
-    private List<BankAccount> bankAccounts = new ArrayList<>();
+    private final UserRepository userRepository;
 
-    public List<BankAccountDTO> findAll() {
-        return bankAccountRepository.findAll().stream()
-                .map(bankAccount -> new BankAccountDTO().toDTO(bankAccount))
-                .toList();
+    public List<BankAccount> findAll() {
+        return bankAccountRepository.findAll();
     }
 
-    public BankAccountDTO findById(long id) {
-        return new BankAccountDTO().toDTO(bankAccountRepository.findById(id));
+    public BankAccount findById(long id) {
+        return bankAccountRepository.findById(id);
     }
 
-    public long create(UserDTO userDTO, BankAccountDTO bankAccountDTO) {
-        User user = userDTO.toEntity(userDTO);
-        BankAccount bankAccount = bankAccountDTO.toEntity(bankAccountDTO);
-        bankAccount.setOwner(user);
-        long newBankAccountId = bankAccountRepository.save(bankAccount);
-        return newBankAccountId;
+    public long save(BankAccount bankAccount) {
+        // Проверяем, существует ли пользователь
+        User userExists = userRepository.findById(bankAccount.getOwner().getId());
+
+        if (userExists == null) {
+            throw new UserNotFoundException("User with ID " + bankAccount.getOwner().getId() + " does not exist.");
+        }
+
+        return bankAccountRepository.save(bankAccount);
     }
 
-    public void updateById(long id, BankAccountDTO bankAccountDTO) {
-        bankAccountDTO.setId(id);
-        bankAccountRepository.updateById(bankAccountDTO.toEntity(bankAccountDTO));
+    public void updateById(long id, BankAccount bankAccount) {
+        bankAccount.setId(id);
+        bankAccountRepository.updateById(bankAccount);
     }
 
     public void deleteById(long id) {

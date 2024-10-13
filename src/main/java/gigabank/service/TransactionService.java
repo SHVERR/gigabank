@@ -1,26 +1,18 @@
 package gigabank.service;
 
-import gigabank.dto.BankAccountDTO;
-import gigabank.dto.TransactionDTO;
-import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
-import gigabank.entity.TransactionTypeDeprecated;
 import gigabank.entity.User;
+import gigabank.mapper.TransactionMapper;
 import gigabank.repository.TransactionRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.*;
-
-import static gigabank.service.Utils.IS_SUCCESS;
-import static gigabank.service.Utils.generateTransactionId;
 
 /**
  * Сервис отвечает за управление платежами и переводами
@@ -35,25 +27,23 @@ public class TransactionService {
             "Health", "Beauty", "Education", "Deposit", "Transfer");
     @Deprecated
     private final List<Transaction> transactions = new ArrayList<>();
+    private final TransactionMapper transactionMapper;
 
-    public List<TransactionDTO> findAll() {
-        return transactionRepository.findAll().stream()
-                .map(transaction -> new TransactionDTO().toDTO(transaction))
-                .toList();
+    public List<Transaction> findAll() {
+        return transactionRepository.findAll();
     }
 
-    public TransactionDTO findById(Long id) {
-        return new TransactionDTO().toDTO(transactionRepository.findById(id));
+    public Transaction findById(Long id) {
+        return transactionRepository.findById(id);
     }
 
-    public long save(TransactionDTO transactionDTO) {
-        Transaction transaction = transactionDTO.toEntity(transactionDTO);
+    public long save(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 
-    public void updateById(long id, TransactionDTO transactionDTO) {
-        transactionDTO.setId(id);
-        transactionRepository.updateById(transactionDTO.toEntity(transactionDTO));
+    public void updateById(long id, Transaction transaction) {
+        transaction.setId(id);
+        transactionRepository.updateById(transaction);
     }
 
     public void deleteById(long id) {
