@@ -2,7 +2,7 @@ package gigabank.service;
 
 import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
-import gigabank.entity.TransactionType;
+import gigabank.entity.TransactionTypeDeprecated;
 import gigabank.entity.User;
 import org.apache.commons.lang3.StringUtils;
 
@@ -23,7 +23,7 @@ public class AnalyticsService {
      * @param bankAccount - счет
      * @param category    - категория
      */
-    public BigDecimal getMonthlySpendingByCategory(BankAccount bankAccount, String category) {
+/*    public BigDecimal getMonthlySpendingByCategory(BankAccount bankAccount, String category) {
         BigDecimal sum = BigDecimal.ZERO;
         if (bankAccount == null || category == null
                 || !TransactionService.TRANSACTION_CATEGORIES.contains(category)) {
@@ -40,7 +40,7 @@ public class AnalyticsService {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         return sum;
-    }
+    }*/
 
     /**
      * Вывод суммы потраченных средств на n категорий за последний месяц
@@ -50,7 +50,7 @@ public class AnalyticsService {
      * @param categories - категории
      * @return мапа категория - сумма потраченных средств
      */
-    public Map<String, BigDecimal> getMonthlySpendingByCategories(User user, Set<String> categories) {
+/*    public Map<String, BigDecimal> getMonthlySpendingByCategories(User user, Set<String> categories) {
         Map<String, BigDecimal> monthlySpendingMap = new HashMap<>();
 
         if (user == null || categories == null) {
@@ -75,7 +75,7 @@ public class AnalyticsService {
                 .collect(Collectors.toMap(Transaction::getCategory, Transaction::getValue, BigDecimal::add));
 
         return monthlySpendingMap;
-    }
+    }*/
 
     /**
      * Вывод платежных операций по всем счетам и по всем категориям от наибольшей к наименьшей
@@ -83,7 +83,7 @@ public class AnalyticsService {
      * @param user - пользователь
      * @return мапа категория - все операции совершенные по ней
      */
-    public LinkedHashMap<String, List<Transaction>> getTransactionHistorySortedByAmount(User user) {
+/*    public LinkedHashMap<String, List<Transaction>> getTransactionHistorySortedByAmount(User user) {
         LinkedHashMap<String, List<Transaction>> transactionsMap = new LinkedHashMap<>();
 
         if (user == null) {
@@ -97,7 +97,7 @@ public class AnalyticsService {
                 .collect(Collectors.groupingBy(Transaction::getCategory, LinkedHashMap::new, Collectors.toList()));
 
         return transactionsMap;
-    }
+    }*/
 
     /**
      * Вывод последних N транзакций
@@ -126,7 +126,7 @@ public class AnalyticsService {
      * @param user пользователь
      * @param n    количество транзакций
      */
-    public PriorityQueue<Transaction> getTopNLargestTransactions(User user, int n) {
+/*    public PriorityQueue<Transaction> getTopNLargestTransactions(User user, int n) {
         PriorityQueue<Transaction> topTransactions = new PriorityQueue<>();
 
         if (user == null || n <= 0) {
@@ -142,7 +142,7 @@ public class AnalyticsService {
                         Comparator.comparing(Transaction::getValue).reversed())));
 
         return topTransactions;
-    }
+    }*/
 
     /*-------------------------------------------------------*/
 

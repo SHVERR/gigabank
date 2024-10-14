@@ -1,61 +1,58 @@
 package gigabank.service;
 
-import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
-import gigabank.entity.TransactionType;
 import gigabank.entity.User;
+import gigabank.mapper.TransactionMapper;
+import gigabank.repository.TransactionRepository;
 import lombok.Data;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.*;
 
-import static gigabank.service.Utils.IS_SUCCESS;
-import static gigabank.service.Utils.generateTransactionId;
-
 /**
  * Сервис отвечает за управление платежами и переводами
  */
 @Service
 @Data
+@RequiredArgsConstructor
 public class TransactionService {
+    private final TransactionRepository transactionRepository;
+    @Deprecated
     public static final Set<String> TRANSACTION_CATEGORIES = Set.of(
             "Health", "Beauty", "Education", "Deposit", "Transfer");
-
+    @Deprecated
     private final List<Transaction> transactions = new ArrayList<>();
+    private final TransactionMapper transactionMapper;
 
-    public Transaction addTransaction(Transaction transaction) {
-        transactions.add(transaction);
-        return transaction;
+    public List<Transaction> findAll() {
+        return transactionRepository.findAll();
     }
 
-    public Transaction getTransactionById(String id) {
-        return transactions.stream()
-                .filter(transaction -> transaction.getId().equals(id))
-                .findAny()
-                .orElse(null);
+    public Transaction findById(Long id) {
+        return transactionRepository.findById(id);
     }
 
-    public Transaction updateTransaction(String id, Transaction updatedTransaction) {
-        Transaction transactionToUpdate = getTransactionById(id);
-        transactionToUpdate.setId(updatedTransaction.getId());
-        transactionToUpdate.setValue(updatedTransaction.getValue());
-        transactionToUpdate.setType(updatedTransaction.getType());
-        transactionToUpdate.setCategory(updatedTransaction.getCategory());
-        transactionToUpdate.setBankAccount(updatedTransaction.getBankAccount());
-        transactionToUpdate.setCreatedDate(updatedTransaction.getCreatedDate());
-
-        return transactionToUpdate;
+    public long save(Transaction transaction) {
+        return transactionRepository.save(transaction);
     }
 
-    public void deleteTransaction(String id) {
-        transactions.removeIf(transaction -> transaction.getId().equals(id));
+    public void updateById(long id, Transaction transaction) {
+        transaction.setId(id);
+        transactionRepository.updateById(transaction);
     }
+
+    public void deleteById(long id) {
+        transactionRepository.deleteById(id);
+    }
+
+
+//----------------------------------------------------
+/*
 
     public boolean paymentTransaction(BankAccount bankAccount, Transaction transaction) {
         if (bankAccount == null || transaction == null
@@ -86,7 +83,7 @@ public class TransactionService {
         Transaction transactionFromAccount = new Transaction(
                 generateTransactionId(),
                 amount,
-                TransactionType.TRANSFER,
+                TransactionTypeDeprecated.TRANSFER,
                 categoryTransfer,
                 fromAccount,
                 LocalDateTime.now());
@@ -98,7 +95,7 @@ public class TransactionService {
         Transaction transactionToAccount = new Transaction(
                 generateTransactionId(),
                 amount,
-                TransactionType.TRANSFER,
+                TransactionTypeDeprecated.TRANSFER,
                 categoryTransfer,
                 toAccount,
                 LocalDateTime.now());
@@ -107,6 +104,7 @@ public class TransactionService {
         transactionToAccount.setBankAccount(toAccount);
         return IS_SUCCESS;
     }
+*/
 
     //----Функциональные интерфейсы-----
     public List<Transaction> filterTransactions(User user, Predicate<Transaction> predicate) {

@@ -3,6 +3,7 @@ package gigabank.entity;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.RequiredArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -12,11 +13,12 @@ import java.time.LocalDateTime;
  */
 @Data
 @AllArgsConstructor
+@RequiredArgsConstructor
 public class Transaction {
-    private String id;
+    private long id;
     private BigDecimal value;
     private TransactionType type;
-    private String category;
+    private TransactionCategory category;
     @EqualsAndHashCode.Exclude
     private BankAccount bankAccount;
     private LocalDateTime createdDate;
@@ -28,7 +30,7 @@ public class Transaction {
                 ", value=" + value +
                 ", type=" + type +
                 ", category='" + category + '\'' +
-                ", bankAccount id=" + bankAccount.getId() +
+                ", bankAccount" + bankAccount +
                 ", createdDate=" + createdDate +
                 '}';
     }
