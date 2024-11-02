@@ -1,18 +1,17 @@
 package gigabank.repository;
 
 import gigabank.entity.BankAccount;
-import gigabank.entity.User;
 
 import java.util.List;
 
 public interface BankAccountRepository {
     List<BankAccount> findAll();
 
-    BankAccount findById(long id);
+    BankAccount findById(Long id);
 
-    long save(BankAccount bankAccount);
+    Long save(BankAccount bankAccount);
 
     void updateById(BankAccount bankAccount);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

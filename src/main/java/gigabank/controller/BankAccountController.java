@@ -25,23 +25,23 @@ public class BankAccountController {
     }
 
     @GetMapping("/{id}")
-    public BankAccountDTO getById(@PathVariable("id") long id) {
+    public BankAccountDTO getById(@PathVariable("id") Long id) {
         return bankAccountMapper.toDTO(bankAccountService.findById(id));
     }
 
     @PostMapping()
-    public long create(@RequestBody BankAccountDTO bankAccountDTO) {
+    public Long create(@RequestBody BankAccountDTO bankAccountDTO) {
 
         return bankAccountService.save(bankAccountMapper.toEntity(bankAccountDTO));
     }
 
     @PatchMapping("/{id}")
-    public void updateById(@PathVariable("id") long id, @RequestBody BankAccountDTO bankAccountDTO) {
+    public void updateById(@PathVariable("id") Long id, @RequestBody BankAccountDTO bankAccountDTO) {
         bankAccountService.updateById(id, bankAccountMapper.toEntity(bankAccountDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") long id) {
+    public void deleteById(@PathVariable("id") Long id) {
         bankAccountService.deleteById(id);
     }
 }

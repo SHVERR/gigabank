@@ -13,7 +13,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
@@ -36,13 +35,12 @@ class UserControllerTest {
 
         // Create
         UserDTO userDTO = new UserDTO(
-                0,
+                null,
                 "testName",
                 "testMiddleName",
                 "testLastName",
                 "+71234567890",
-                LocalDate.now().minusYears(20),
-                new ArrayList<>());
+                LocalDate.now().minusYears(20));
 
         String serializedUserDTO = objectMapper.writeValueAsString(userDTO);
 
@@ -52,7 +50,7 @@ class UserControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        long userId = objectMapper.readValue(resultUser.getResponse().getContentAsString(), Long.class);
+        Long userId = objectMapper.readValue(resultUser.getResponse().getContentAsString(), Long.class);
 
         User user = userService.findById(userId);
         assertEquals(user.getFirstName(), userDTO.getFirstName());

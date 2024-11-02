@@ -11,11 +11,11 @@ public interface UserRepository {
     List<User> findAll();
 
     /** Получает из базы данных пользователя по id с его банковскими счетами */
-    User findById(long id);
+    User findById(Long id);
 
-    long save(User user);
+    Long save(User user);
 
     void updateById(User user);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

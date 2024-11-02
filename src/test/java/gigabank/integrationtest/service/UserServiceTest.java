@@ -5,6 +5,7 @@ import gigabank.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ class UserServiceTest {
     void testUserCRUD() {
         // Create and Read
         User user = new User(
-                0,
+                null,
                 "testName",
                 "testMiddleName",
                 "testLastName",
@@ -30,7 +31,7 @@ class UserServiceTest {
                 LocalDate.now().minusYears(18),
                 new ArrayList<>());
 
-        long userId = userService.save(user);
+        Long userId = userService.save(user);
         User newUser = userService.findById(userId);
 
         assertEquals("testName", newUser.getFirstName());

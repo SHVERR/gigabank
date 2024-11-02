@@ -1,22 +1,47 @@
 package gigabank.service;
 
-import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
-import gigabank.entity.TransactionTypeDeprecated;
+import gigabank.entity.TransactionCategory;
 import gigabank.entity.User;
-import org.apache.commons.lang3.StringUtils;
+import gigabank.repository.AnalyticsRepository;
+import lombok.Data;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * Сервис предоставляет аналитику по операциям пользователей
  */
+@Service
+@Data
+@RequiredArgsConstructor
 public class AnalyticsService {
+    private final AnalyticsRepository analyticsRepository;
+
+    public BigDecimal getLargestTransactionFromBankAccount (Long bankAccountId) {
+        return analyticsRepository.getLargestTransactionFromBankAccount(bankAccountId);
+    }
+
+    public BigDecimal getSmallestTransactionFromBankAccount (Long bankAccountId) {
+        return analyticsRepository.getSmallestTransactionFromBankAccount(bankAccountId);
+    }
+
+    public BigDecimal getAverageTransactionFromBankAccount (Long bankAccountId) {
+        return analyticsRepository.getAverageTransactionFromBankAccount(bankAccountId);
+    }
+
+    public BigDecimal getSumTransactionsByCategoryFromBankAccount (Long bankAccountId, TransactionCategory category) {
+        return analyticsRepository.getSumTransactionsByCategoryFromBankAccount(bankAccountId, category);
+    }
+
+ // Old ----------------------------------------------
+
     /**
      * Вывод суммы потраченных средств на категорию за последний месяц
      *

@@ -26,33 +26,23 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public UserDTO getById(@PathVariable("id") long id) {
+    public UserDTO getById(@PathVariable("id") Long id) {
         return userMapper.toDTO(userService.findById(id));
     }
 
     @PostMapping()
-    public ResponseEntity<Object> create(@RequestBody @Valid UserDTO userDTO, BindingResult result) {
-        if (result.hasErrors()) {
-            List<String> errors = result.getFieldErrors()
-                    .stream()
-                    .map(error -> error.getDefaultMessage())
-                    .toList();
-
-            // Возвращаем 400 Bad Request с ошибками в теле
-            return ResponseEntity.badRequest().body(errors);
-        }
-
-        long userId = userService.save(userMapper.toEntity(userDTO));
+    public ResponseEntity<Long> create(@RequestBody @Valid UserDTO userDTO) {
+        Long userId = userService.save(userMapper.toEntity(userDTO));
         return ResponseEntity.ok(userId);
     }
 
     @PatchMapping("/{id}")
-    public void updateById(@PathVariable("id") long id, @RequestBody @Valid UserDTO userDTO) {
+    public void updateById(@PathVariable("id") Long id, @RequestBody @Valid UserDTO userDTO) {
         userService.updateById(id, userMapper.toEntity(userDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") long id) {
+    public void deleteById(@PathVariable("id") Long id) {
         userService.deleteById(id);
     }
 }

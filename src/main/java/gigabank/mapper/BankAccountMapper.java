@@ -18,11 +18,7 @@ public class BankAccountMapper implements RowMapper<BankAccount> {
         return new BankAccountDTO(
                 bankAccount.getId(),
                 bankAccount.getBalance(),
-                bankAccount.getOwner().getId(),
-                bankAccount.getTransactions().stream()
-                        .map(Transaction::getId)
-                        .toList()
-        );
+                bankAccount.getOwner().getId());
     }
 
     public BankAccount toEntity(BankAccountDTO bankAccountDTO) {
@@ -30,13 +26,12 @@ public class BankAccountMapper implements RowMapper<BankAccount> {
                 bankAccountDTO.getId(),
                 bankAccountDTO.getBalance(),
                 new User(),
-                new ArrayList<>());
+                null);
 
         bankAccount.getOwner().setId(bankAccountDTO.getOwnerId());
 
         return bankAccount;
     }
-
 
     public BankAccount mapRow(ResultSet rs, int rowNum) throws SQLException {
         User user = new User();
@@ -45,7 +40,6 @@ public class BankAccountMapper implements RowMapper<BankAccount> {
                 rs.getLong("bank_account_id"),
                 rs.getBigDecimal("balance"),
                 user,
-                new ArrayList<>()
-        );
+                null);
     }
 }
