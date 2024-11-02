@@ -26,7 +26,7 @@ class BankAccountServiceTest {
     void testBankAccountCRUD() {
         // Create and Read
         User user = new User(
-                0,
+                null,
                 "testName",
                 "testMiddleName",
                 "testLastName",
@@ -37,13 +37,12 @@ class BankAccountServiceTest {
         user.setId(userService.save(user));
 
         BankAccount bankAccount = new BankAccount(
-                0,
+                null,
                 new BigDecimal("12345.99"),
                 user,
-                new ArrayList<>()
-        );
+                new ArrayList<>());
 
-        long bankAccountId = bankAccountService.save(bankAccount);
+        Long bankAccountId = bankAccountService.save(bankAccount);
 
         BankAccount newBankAccount = bankAccountService.findById(bankAccountId);
 

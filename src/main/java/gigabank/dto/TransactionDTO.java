@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class TransactionDTO {
-    private long id;
+    private Long id;
     private BigDecimal value;
-    private long typeId;
-    private long categoryId;
-    private long bankAccountId;
+    private Long typeId;
+    private Long categoryId;
+    private Long bankAccountId;
     private LocalDateTime createdDate;
 
 }

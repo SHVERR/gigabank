@@ -8,6 +8,6 @@ import lombok.RequiredArgsConstructor;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class TransactionType {
-    private long id;
+    private Long id;
     private String name;
 }

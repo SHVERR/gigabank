@@ -30,7 +30,7 @@ class TransactionServiceTest {
     void testTransactionCRUD() {
         // Create and Read
         User user = new User(
-                0,
+                null,
                 "testName",
                 "testMiddleName",
                 "testLastName",
@@ -41,7 +41,7 @@ class TransactionServiceTest {
         user.setId(userService.save(user));
 
         BankAccount bankAccount = new BankAccount(
-                0,
+                null,
                 new BigDecimal("12345.99"),
                 user,
                 new ArrayList<>()
@@ -50,14 +50,14 @@ class TransactionServiceTest {
         bankAccount.setId((bankAccountService.save(bankAccount)));
 
         Transaction transaction = new Transaction(
-                0,
+                null,
                 new BigDecimal("100.00"),
-                new TransactionType(1, "payment"),
-                new TransactionCategory(1, "beauty"),
+                new TransactionType(1L, "payment"),
+                new TransactionCategory(1L, "beauty"),
                 bankAccount,
                 LocalDateTime.now());
 
-        long transactionId = transactionService.save(transaction);
+        Long transactionId = transactionService.save(transaction);
 
         Transaction newTransaction = transactionService.findById(transactionId);
 

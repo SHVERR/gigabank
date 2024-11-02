@@ -7,11 +7,11 @@ import java.util.List;
 public interface TransactionRepository {
     List<Transaction> findAll();
 
-    Transaction findById(long id);
+    Transaction findById(Long id);
 
-    long save(Transaction transaction);
+    Long save(Transaction transaction);
 
     void updateById(Transaction transaction);
 
-    void deleteById(long id);
+    void deleteById(Long id);
 }

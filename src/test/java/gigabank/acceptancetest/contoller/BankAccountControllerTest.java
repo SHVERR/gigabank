@@ -42,13 +42,12 @@ class BankAccountControllerTest {
 
         // Create
         UserDTO userDTO = new UserDTO(
-                0,
+                null,
                 "testName",
                 "testMiddleName",
                 "testLastName",
                 "+71234567890",
-                LocalDate.now().minusYears(20),
-                new ArrayList<>());
+                LocalDate.now().minusYears(20));
 
         String serializedUserDTO = objectMapper.writeValueAsString(userDTO);
 
@@ -58,14 +57,13 @@ class BankAccountControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        long userId = objectMapper.readValue(resultUser.getResponse().getContentAsString(), Long.class);
+        Long userId = objectMapper.readValue(resultUser.getResponse().getContentAsString(), Long.class);
         User user = userService.findById(userId);
 
         BankAccountDTO bankAccountDTO = new BankAccountDTO(
-                0,
+                null,
                 new BigDecimal("12345.99"),
-                user.getId(),
-                new ArrayList<>());
+                user.getId());
 
         String serializedBankAccountDTO = objectMapper.writeValueAsString(bankAccountDTO);
 
@@ -75,7 +73,7 @@ class BankAccountControllerTest {
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        long bankAccountId = Long.parseLong(resultBankAccount.getResponse().getContentAsString());
+        Long bankAccountId = Long.parseLong(resultBankAccount.getResponse().getContentAsString());
 
         BankAccount bankAccount = bankAccountService.findById(bankAccountId);
         assertEquals(bankAccount.getBalance(), bankAccountDTO.getBalance());

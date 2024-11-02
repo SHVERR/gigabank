@@ -12,8 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class BankAccountDTO {
-    private long id;
+    private Long id;
     private BigDecimal balance;
-    private long ownerId;
-    private List<Long> transactionsIds = new ArrayList<>();
+    private Long ownerId;
 }

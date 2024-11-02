@@ -43,10 +43,10 @@ public class TransactionMapper implements RowMapper<Transaction> {
 
     public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
         TransactionType type = new TransactionType();
-        type.setId(rs.getInt("type_id"));
+        type.setId(rs.getLong("type_id"));
 
         TransactionCategory category = new TransactionCategory();
-        category.setId(rs.getInt("category_id"));
+        category.setId(rs.getLong("category_id"));
 
         BankAccount bankAccount = new BankAccount();
         bankAccount.setId(rs.getLong("bank_account_id"));

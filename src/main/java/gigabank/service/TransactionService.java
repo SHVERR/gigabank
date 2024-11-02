@@ -2,7 +2,6 @@ package gigabank.service;
 
 import gigabank.entity.Transaction;
 import gigabank.entity.User;
-import gigabank.mapper.TransactionMapper;
 import gigabank.repository.TransactionRepository;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
@@ -27,7 +26,6 @@ public class TransactionService {
             "Health", "Beauty", "Education", "Deposit", "Transfer");
     @Deprecated
     private final List<Transaction> transactions = new ArrayList<>();
-    private final TransactionMapper transactionMapper;
 
     public List<Transaction> findAll() {
         return transactionRepository.findAll();
@@ -37,16 +35,16 @@ public class TransactionService {
         return transactionRepository.findById(id);
     }
 
-    public long save(Transaction transaction) {
+    public Long save(Transaction transaction) {
         return transactionRepository.save(transaction);
     }
 
-    public void updateById(long id, Transaction transaction) {
+    public void updateById(Long id, Transaction transaction) {
         transaction.setId(id);
         transactionRepository.updateById(transaction);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         transactionRepository.deleteById(id);
     }
 

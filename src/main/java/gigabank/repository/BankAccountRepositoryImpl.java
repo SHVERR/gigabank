@@ -41,13 +41,13 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
 */
 
     @Override
-    public BankAccount findById(long id) {
+    public BankAccount findById(Long id) {
         return jdbcTemplate.query("SELECT * FROM app_bank_account WHERE bank_account_id=?",
                 new BankAccountMapper(), id).stream().findFirst().orElse(null);
     }
 
     @Override
-    public long save(BankAccount bankAccount) {
+    public Long save(BankAccount bankAccount) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -69,7 +69,7 @@ public class BankAccountRepositoryImpl implements BankAccountRepository {
                 bankAccount.getId());
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM app_bank_account WHERE bank_account_id=?", id);
     }
 }

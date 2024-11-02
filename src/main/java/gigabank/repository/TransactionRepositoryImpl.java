@@ -23,13 +23,13 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public Transaction findById(long id) {
+    public Transaction findById(Long id) {
         return jdbcTemplate.query("SELECT * FROM app_transaction WHERE transaction_id=?",
                 new TransactionMapper(), id).stream().findFirst().orElse(null);
     }
 
     @Override
-    public long save(Transaction transaction) {
+    public Long save(Transaction transaction) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -57,7 +57,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
                 transaction.getId());
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM app_transaction WHERE transaction_id=?", id);
     }
 }

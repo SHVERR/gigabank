@@ -15,7 +15,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class Transaction {
-    private long id;
+    private Long id;
     private BigDecimal value;
     private TransactionType type;
     private TransactionCategory category;

@@ -25,22 +25,22 @@ public class TransactionController {
     }
 
     @GetMapping("/{id}")
-    public TransactionDTO getById(@PathVariable("id") long id) {
+    public TransactionDTO getById(@PathVariable("id") Long id) {
         return transactionMapper.toDTO(transactionService.findById(id));
     }
 
     @PostMapping()
-    public long create(@RequestBody TransactionDTO transactionDTO) {
+    public Long create(@RequestBody TransactionDTO transactionDTO) {
         return transactionService.save(transactionMapper.toEntity(transactionDTO));
     }
 
     @PatchMapping("/{id}")
-    public void updateById(@PathVariable("id") long id, @RequestBody TransactionDTO transactionDTO) {
+    public void updateById(@PathVariable("id") Long id, @RequestBody TransactionDTO transactionDTO) {
         transactionService.updateById(id, transactionMapper.toEntity(transactionDTO));
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable("id") long id) {
+    public void deleteById(@PathVariable("id") Long id) {
         transactionService.deleteById(id);
     }
 }

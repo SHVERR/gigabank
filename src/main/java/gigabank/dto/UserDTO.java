@@ -9,14 +9,12 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class UserDTO {
-    private long id;
+    private Long id;
     @NotBlank(message = "Name must not be blank")
     private String firstName;
     private String middleName;
@@ -27,5 +25,4 @@ public class UserDTO {
     @NotNull(message = "BirthDate must not be null")
     @AgeConstraint
     private LocalDate birthDate;
-    private List<Long> bankAccountsIds = new ArrayList<>();
 }

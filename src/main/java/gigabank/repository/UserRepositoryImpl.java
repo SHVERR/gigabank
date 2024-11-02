@@ -23,31 +23,20 @@ public class UserRepositoryImpl implements UserRepository {
      */
     @Override
     public List<User> findAll() {
-        return jdbcTemplate.query("SELECT u.user_id, u.first_name, u.middle_name, u.last_name, u.phone, u.birthdate, " +
-                        "JSON_AGG(json_build_object('id', ba.bank_account_id, 'balance', ba.balance)) as bank_accounts " +
-                        "FROM app_user u " +
-                        "LEFT JOIN app_bank_account ba ON u.user_id = ba.owner_id " +
-                        "GROUP BY u.user_id, u.first_name, u.middle_name, u.last_name, u.birthdate",
-                new UserMapper()
-        );
+        return jdbcTemplate.query("SELECT * FROM app_user", new UserMapper());
     }
 
     /**
      * Получает из базы данных пользователя по id с его банковскими счетами
      */
     @Override
-    public User findById(long id) {
-        return jdbcTemplate.query("SELECT u.user_id, u.first_name, u.middle_name, u.last_name, u.phone, u.birthdate, " +
-                        "JSON_AGG(json_build_object('id', ba.bank_account_id, 'balance', ba.balance)) as bank_accounts " +
-                        "FROM app_user u " +
-                        "LEFT JOIN app_bank_account ba ON u.user_id = ba.owner_id " +
-                        "WHERE u.user_id=? " +
-                        "GROUP BY u.user_id, u.first_name, u.middle_name, u.last_name, u.birthdate",
+    public User findById(Long id) {
+        return jdbcTemplate.query("SELECT * FROM app_user WHERE app_user.user_id = ?",
                 new UserMapper(), id).stream().findFirst().orElse(null);
     }
 
     @Override
-    public long save(User user) {
+    public Long save(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(con -> {
@@ -78,7 +67,6 @@ public class UserRepositoryImpl implements UserRepository {
                 user.getId());
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         jdbcTemplate.update("DELETE FROM app_user WHERE user_id=?", id);
-    }
-}
+    }}

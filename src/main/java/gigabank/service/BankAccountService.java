@@ -25,11 +25,11 @@ public class BankAccountService {
         return bankAccountRepository.findAll();
     }
 
-    public BankAccount findById(long id) {
+    public BankAccount findById(Long id) {
         return bankAccountRepository.findById(id);
     }
 
-    public long save(BankAccount bankAccount) {
+    public Long save(BankAccount bankAccount) {
         // Проверяем, существует ли пользователь
         User userExists = userRepository.findById(bankAccount.getOwner().getId());
 
@@ -40,12 +40,12 @@ public class BankAccountService {
         return bankAccountRepository.save(bankAccount);
     }
 
-    public void updateById(long id, BankAccount bankAccount) {
+    public void updateById(Long id, BankAccount bankAccount) {
         bankAccount.setId(id);
         bankAccountRepository.updateById(bankAccount);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         bankAccountRepository.deleteById(id);
     }
 

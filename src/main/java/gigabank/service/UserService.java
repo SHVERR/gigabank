@@ -40,15 +40,15 @@ public class UserService {
      * Добавляет нового Пользователя в Repository и создаёт ему Банковский счёт с нулевым балансом
      * @param user новый Пользователь из Controller
      */
-    public long save (User user) {
+    public Long save (User user) {
 
-        long newUserId = userRepository.save(user);
+        Long newUserId = userRepository.save(user);
         user.setId(newUserId);
 
         // создаёт новомому Пользователю Банковский аккаунт
         // ---------------------------
         BankAccount bankAccount = new BankAccount(
-                0,
+                null,
                 new BigDecimal("0.00"),
                 user,
                 new ArrayList<>()
@@ -60,12 +60,12 @@ public class UserService {
         return newUserId;
     }
 
-    public void updateById(long id, User user) {
+    public void updateById(Long id, User user) {
         user.setId(id);
         userRepository.updateById(user);
     }
 
-    public void deleteById(long id) {
+    public void deleteById(Long id) {
         userRepository.deleteById(id);
     }
 }
