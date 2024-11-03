@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS app_user
     first_name  VARCHAR(30) NOT NULL,
     middle_name VARCHAR(30) NOT NULL,
     last_name   VARCHAR(30) NOT NULL,
-    birthdate   DATE        NOT NULL
+    birth_date   DATE        NOT NULL
 );
 
 CREATE TABLE IF NOT EXISTS app_bank_account

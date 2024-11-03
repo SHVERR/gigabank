@@ -1,8 +1,6 @@
 package gigabank.controller;
 
-import gigabank.dto.BankAccountDTO;
 import gigabank.dto.TransactionDTO;
-import gigabank.entity.Transaction;
 import gigabank.mapper.TransactionMapper;
 import gigabank.service.TransactionService;
 import lombok.RequiredArgsConstructor;

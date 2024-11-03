@@ -1,17 +1,9 @@
 package gigabank.repository;
 
 import gigabank.entity.Transaction;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import java.util.List;
-
-public interface TransactionRepository {
-    List<Transaction> findAll();
-
-    Transaction findById(Long id);
-
-    Long save(Transaction transaction);
-
-    void updateById(Transaction transaction);
-
-    void deleteById(Long id);
+@Repository
+public interface TransactionRepository extends JpaRepository<Transaction, Long> {
 }

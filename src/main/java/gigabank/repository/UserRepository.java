@@ -1,21 +1,14 @@
 package gigabank.repository;
 
 import gigabank.entity.User;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
-public interface UserRepository {
-    /**
-     * Получает из базы данных всех пользователей с их банковскими счетами
-     */
-    List<User> findAll();
+@Repository
+public interface UserRepository extends JpaRepository<User, Long> {
+    List<User> findByFirstName(String username);
 
-    /** Получает из базы данных пользователя по id с его банковскими счетами */
-    User findById(Long id);
-
-    Long save(User user);
-
-    void updateById(User user);
-
-    void deleteById(Long id);
+    List<User> findByFirstNameOrderByBirthDate(String firstName);
 }

@@ -5,14 +5,10 @@ import gigabank.entity.BankAccount;
 import gigabank.entity.Transaction;
 import gigabank.entity.TransactionCategory;
 import gigabank.entity.TransactionType;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-
 @Component
-public class TransactionMapper implements RowMapper<Transaction> {
+public class TransactionMapper {
 
     public TransactionDTO toDTO(Transaction transaction) {
         return new TransactionDTO(
@@ -39,25 +35,5 @@ public class TransactionMapper implements RowMapper<Transaction> {
         transaction.getBankAccount().setId(transactionDTO.getBankAccountId());
 
         return transaction;
-    }
-
-    public Transaction mapRow(ResultSet rs, int rowNum) throws SQLException {
-        TransactionType type = new TransactionType();
-        type.setId(rs.getLong("type_id"));
-
-        TransactionCategory category = new TransactionCategory();
-        category.setId(rs.getLong("category_id"));
-
-        BankAccount bankAccount = new BankAccount();
-        bankAccount.setId(rs.getLong("bank_account_id"));
-
-        return new Transaction(
-                rs.getLong("transaction_id"),
-                rs.getBigDecimal("value"),
-                type,
-                category,
-                bankAccount,
-                rs.getTimestamp("created_date").toLocalDateTime()
-        );
     }
 }

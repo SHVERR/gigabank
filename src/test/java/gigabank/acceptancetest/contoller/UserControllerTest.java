@@ -36,7 +36,7 @@ class UserControllerTest {
         // Create
         UserDTO userDTO = new UserDTO(
                 null,
-                "testName",
+                "testFirstName",
                 "testMiddleName",
                 "testLastName",
                 "+71234567890",
@@ -64,7 +64,7 @@ class UserControllerTest {
         assertEquals(fetched.getFirstName(), userDTO.getFirstName());
 
         // Update
-        userDTO.setFirstName("testName2");
+        userDTO.setFirstName("testFirstName2");
         serializedUserDTO = objectMapper.writeValueAsString(userDTO);
 
         mockMvc.perform(patch((String.format("/users/%s", userId)))

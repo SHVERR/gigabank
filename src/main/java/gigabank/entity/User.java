@@ -1,40 +1,33 @@
 package gigabank.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Информация о пользователе
  */
+@Entity
+@Table(name = "app_user")
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class User {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
     private Long id;
+
     private String firstName;
     private String middleName;
     private String lastName;
     private String phone;
     private LocalDate birthDate;
-    @EqualsAndHashCode.Exclude
-    private List<BankAccount> bankAccounts = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id='" + id + '\'' +
-                ", firstName='" + firstName + '\'' +
-                ", middleName='" + middleName + '\'' +
-                ", lastName='" + lastName + '\'' +
-                ", phone='" + phone + '\'' +
-                ", birthDate=" + birthDate +
-                ", bankAccounts=" + bankAccounts +
-                '}';
-    }
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL)
+    private List<BankAccount> bankAccounts;
 }
