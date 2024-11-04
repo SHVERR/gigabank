@@ -8,7 +8,7 @@ services:
     depends_on:
       - my_postgres_container # Зависимость от контейнера с базой данных
     environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://my_postgres_container:5433/dockerdb
+      SPRING_DATASOURCE_URL: jdbc:postgresql://my_postgres_container:5432/dockerdb
       SPRING_DATASOURCE_USERNAME: gigabank
       SPRING_DATASOURCE_PASSWORD: gigabank
 
