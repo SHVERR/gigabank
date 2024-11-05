@@ -2,6 +2,7 @@ package gigabank.acceptancetest.contoller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gigabank.dto.TransactionAggregationRequestDTO;
 import gigabank.entity.*;
 import gigabank.service.BankAccountService;
 import gigabank.service.TransactionService;
@@ -14,6 +15,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -26,6 +28,7 @@ import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
@@ -181,14 +184,18 @@ class AnalyticsControllerTest {
     }
 
     @Test
-    void getTransactionValuesByBankAccountIdAndRangeDates() throws Exception {
+    void shouldGeTransactionValuesByBankAccountIdAndRangeDates() throws Exception {
 
-        LocalDateTime startDate = LocalDateTime.now().minusDays(1);
-        LocalDateTime endDate = LocalDateTime.now();
+        TransactionAggregationRequestDTO dto = new TransactionAggregationRequestDTO(
+                bankAccountId,
+                LocalDateTime.now().minusDays(1),
+                LocalDateTime.now());
 
-        MvcResult result = mockMvc.perform(get("/analytics/transaction-values-by-bank-account-id-and-range-dates/{bank-account-id}", bankAccountId)
-                        .param("start-date", String.valueOf(startDate))
-                        .param("end-date", String.valueOf(endDate)))
+        String serializedBankAccountDTO = objectMapper.writeValueAsString(dto);
+
+        MvcResult result = mockMvc.perform(post("/analytics/transactions/aggregate")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(serializedBankAccountDTO))
                 .andExpect(status().is2xxSuccessful())
                 .andReturn();
 

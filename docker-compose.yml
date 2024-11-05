@@ -1,0 +1,22 @@
+version: "3.9"
+
+services:
+  gigabank_container: # Имя вашего сервиса (приложения)
+    image: gigabank # Имя образа вашего приложения
+    ports:
+      - "8080:8080" # Порты вашего приложения
+    depends_on:
+      - my_postgres_container # Зависимость от контейнера с базой данных
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://my_postgres_container:5432/dockerdb
+      SPRING_DATASOURCE_USERNAME: gigabank
+      SPRING_DATASOURCE_PASSWORD: gigabank
+
+  my_postgres_container: # Имя сервиса базы данных (совпадает с именем контейнера)
+    image: postgres:latest # Или другая версия PostgreSQL
+    ports:
+      - "5433:5432" # Проброс портов базы данных (5433 на хосте -> 5432 в контейнере)
+    environment:
+      POSTGRES_USER: gigabank
+      POSTGRES_PASSWORD: gigabank
+      POSTGRES_DB: dockerdb
