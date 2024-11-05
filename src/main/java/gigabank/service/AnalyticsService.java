@@ -1,5 +1,6 @@
 package gigabank.service;
 
+import gigabank.dto.TransactionAggregationRequestDTO;
 import gigabank.entity.Transaction;
 import gigabank.entity.User;
 import gigabank.repository.AnalyticsRepository;
@@ -40,10 +41,8 @@ public class AnalyticsService {
         return analyticsRepository.getSumTransactionsByBankAccountIdAndCategoryName(bankAccountId, categoryName);
     }
 
-    public List<BigDecimal> getTransactionValuesByBankAccountIdAndRangeDates(Long bankAccountId,
-                                                                             LocalDateTime startDate,
-                                                                             LocalDateTime endDate) {
-       return analyticsRepository.getTransactionValuesByBankAccountIdAndRangeDates(bankAccountId, startDate, endDate);
+    public List<BigDecimal> aggregateTransactions(TransactionAggregationRequestDTO request) {
+        return analyticsRepository.aggregateTransactions(request);
     }
 
     // Old ----------------------------------------------
