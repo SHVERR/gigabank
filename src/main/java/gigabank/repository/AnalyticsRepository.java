@@ -1,17 +1,25 @@
 package gigabank.repository;
 
 import gigabank.entity.Transaction;
-import gigabank.entity.TransactionCategory;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 
 import java.math.BigDecimal;
 
-public interface AnalyticsRepository {
+@Repository
+public interface AnalyticsRepository extends JpaRepository<Transaction, Long>, CustomAnalyticsRepository {
 
-    BigDecimal getLargestTransactionFromBankAccount(Long bankAccountId);
+    @Query("SELECT MAX(t.value) FROM Transaction t WHERE t.bankAccount.id = :bankAccountId")
+    BigDecimal getLargestTransactionByBankAccountId(Long bankAccountId);
 
-    BigDecimal getSmallestTransactionFromBankAccount(Long bankAccountId);
+    @Query("SELECT MIN(t.value) FROM Transaction t WHERE t.bankAccount.id = :bankAccountId")
+    BigDecimal getSmallestTransactionByBankAccountId(Long bankAccountId);
 
-    BigDecimal getAverageTransactionFromBankAccount(Long bankAccountId);
+    @Query("SELECT AVG(t.value) FROM Transaction t WHERE t.bankAccount.id = :bankAccountId")
+    BigDecimal getAverageTransactionByBankAccountId(Long bankAccountId);
 
-    BigDecimal getSumTransactionsByCategoryFromBankAccount(Long bankAccountId, TransactionCategory category);
+    @Query("SELECT SUM(t.value) FROM Transaction t " +
+            "WHERE t.bankAccount.id = :bankAccountId AND t.category.name = :categoryName")
+    BigDecimal getSumTransactionsByBankAccountIdAndCategoryName(Long bankAccountId, String categoryName);
 }

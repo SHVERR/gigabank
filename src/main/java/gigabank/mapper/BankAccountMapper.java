@@ -2,17 +2,11 @@ package gigabank.mapper;
 
 import gigabank.dto.BankAccountDTO;
 import gigabank.entity.BankAccount;
-import gigabank.entity.Transaction;
 import gigabank.entity.User;
-import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-
 @Component
-public class BankAccountMapper implements RowMapper<BankAccount> {
+public class BankAccountMapper {
 
     public BankAccountDTO toDTO(BankAccount bankAccount) {
         return new BankAccountDTO(
@@ -31,15 +25,5 @@ public class BankAccountMapper implements RowMapper<BankAccount> {
         bankAccount.getOwner().setId(bankAccountDTO.getOwnerId());
 
         return bankAccount;
-    }
-
-    public BankAccount mapRow(ResultSet rs, int rowNum) throws SQLException {
-        User user = new User();
-        user.setId(rs.getLong("owner_id"));
-        return new BankAccount(
-                rs.getLong("bank_account_id"),
-                rs.getBigDecimal("balance"),
-                user,
-                null);
     }
 }

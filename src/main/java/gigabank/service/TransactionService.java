@@ -32,16 +32,16 @@ public class TransactionService {
     }
 
     public Transaction findById(Long id) {
-        return transactionRepository.findById(id);
+        return transactionRepository.findById(id).orElse(null);
     }
 
     public Long save(Transaction transaction) {
-        return transactionRepository.save(transaction);
+        return transactionRepository.save(transaction).getId();
     }
 
     public void updateById(Long id, Transaction transaction) {
         transaction.setId(id);
-        transactionRepository.updateById(transaction);
+        transactionRepository.save(transaction);
     }
 
     public void deleteById(Long id) {

@@ -1,38 +1,36 @@
 package gigabank.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import gigabank.dto.BankAccountDTO;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.RequiredArgsConstructor;
+import jakarta.persistence.*;
+import lombok.*;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Информация о банковском счете пользователя
  */
+@Entity
+@Table(name = "app_bank_account")
 @Data
 @AllArgsConstructor
 @RequiredArgsConstructor
 public class BankAccount {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "bank_account_id")
     private Long id;
-    private BigDecimal balance;
-    @EqualsAndHashCode.Exclude
-    private User owner;
-    @EqualsAndHashCode.Exclude
-    private List<Transaction> transactions = new ArrayList<>();
 
-    @Override
-    public String toString() {
-        return "BankAccount{" +
-                "id='" + id + '\'' +
-                ", balance=" + balance +
-                ", owner=" + owner +
-                ", transactions=" + transactions +
-                '}';
-    }
+    private BigDecimal balance;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
+    private User owner;
+
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    @OneToMany(mappedBy = "bankAccount", cascade = CascadeType.ALL)
+    private List<Transaction> transactions;
 }
 

@@ -1,7 +1,5 @@
 package gigabank.service;
 
-import gigabank.dto.BankAccountDTO;
-import gigabank.dto.UserDTO;
 import gigabank.entity.BankAccount;
 import gigabank.entity.User;
 import gigabank.repository.BankAccountRepository;
@@ -32,8 +30,8 @@ public class UserService {
      * Предоставляет пользователя по его id из Repository с его банковскими счетами
      * @param id Пользователя
      */
-    public User findById(long id) {
-        return userRepository.findById(id);
+    public User findById(Long id) {
+        return userRepository.findById(id).orElse(null);
     }
 
     /**
@@ -42,30 +40,41 @@ public class UserService {
      */
     public Long save (User user) {
 
-        Long newUserId = userRepository.save(user);
-        user.setId(newUserId);
+        final User createdUser = userRepository.save(user);
 
         // создаёт новомому Пользователю Банковский аккаунт
         // ---------------------------
         BankAccount bankAccount = new BankAccount(
                 null,
                 new BigDecimal("0.00"),
-                user,
+                createdUser,
                 new ArrayList<>()
         );
 
         bankAccountRepository.save(bankAccount);
         // ---------------------------
 
-        return newUserId;
+        return createdUser.getId();
     }
 
     public void updateById(Long id, User user) {
         user.setId(id);
-        userRepository.updateById(user);
+        userRepository.save(user);
     }
 
     public void deleteById(Long id) {
         userRepository.deleteById(id);
+    }
+
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
+
+    public List<User> findByFirstName(String firstName) {
+        return userRepository.findByFirstName(firstName);
+    }
+
+    public List<User> findByFirstNameOrderByBirthDate(String firstName) {
+        return userRepository.findByFirstNameOrderByBirthDate(firstName);
     }
 }

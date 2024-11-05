@@ -26,23 +26,23 @@ public class BankAccountService {
     }
 
     public BankAccount findById(Long id) {
-        return bankAccountRepository.findById(id);
+        return bankAccountRepository.findById(id).orElse(null);
     }
 
     public Long save(BankAccount bankAccount) {
         // Проверяем, существует ли пользователь
-        User userExists = userRepository.findById(bankAccount.getOwner().getId());
+        final User userExists = userRepository.findById(bankAccount.getOwner().getId()).orElse(null);
 
         if (userExists == null) {
             throw new UserNotFoundException("User with ID " + bankAccount.getOwner().getId() + " does not exist.");
         }
 
-        return bankAccountRepository.save(bankAccount);
+        return bankAccountRepository.save(bankAccount).getId();
     }
 
     public void updateById(Long id, BankAccount bankAccount) {
         bankAccount.setId(id);
-        bankAccountRepository.updateById(bankAccount);
+        bankAccountRepository.save(bankAccount);
     }
 
     public void deleteById(Long id) {

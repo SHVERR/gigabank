@@ -1,7 +1,6 @@
 package gigabank.service;
 
 import gigabank.entity.Transaction;
-import gigabank.entity.TransactionCategory;
 import gigabank.entity.User;
 import gigabank.repository.AnalyticsRepository;
 import lombok.Data;
@@ -10,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -24,23 +24,29 @@ import java.util.List;
 public class AnalyticsService {
     private final AnalyticsRepository analyticsRepository;
 
-    public BigDecimal getLargestTransactionFromBankAccount (Long bankAccountId) {
-        return analyticsRepository.getLargestTransactionFromBankAccount(bankAccountId);
+    public BigDecimal getLargestTransactionFromBankAccount(Long bankAccountId) {
+        return analyticsRepository.getLargestTransactionByBankAccountId(bankAccountId);
     }
 
-    public BigDecimal getSmallestTransactionFromBankAccount (Long bankAccountId) {
-        return analyticsRepository.getSmallestTransactionFromBankAccount(bankAccountId);
+    public BigDecimal getSmallestTransactionFromBankAccount(Long bankAccountId) {
+        return analyticsRepository.getSmallestTransactionByBankAccountId(bankAccountId);
     }
 
-    public BigDecimal getAverageTransactionFromBankAccount (Long bankAccountId) {
-        return analyticsRepository.getAverageTransactionFromBankAccount(bankAccountId);
+    public BigDecimal getAverageTransactionFromBankAccount(Long bankAccountId) {
+        return analyticsRepository.getAverageTransactionByBankAccountId(bankAccountId);
     }
 
-    public BigDecimal getSumTransactionsByCategoryFromBankAccount (Long bankAccountId, TransactionCategory category) {
-        return analyticsRepository.getSumTransactionsByCategoryFromBankAccount(bankAccountId, category);
+    public BigDecimal getSumTransactionsByBankAccountIdAndCategoryName(Long bankAccountId, String categoryName) {
+        return analyticsRepository.getSumTransactionsByBankAccountIdAndCategoryName(bankAccountId, categoryName);
     }
 
- // Old ----------------------------------------------
+    public List<BigDecimal> getTransactionValuesByBankAccountIdAndRangeDates(Long bankAccountId,
+                                                                             LocalDateTime startDate,
+                                                                             LocalDateTime endDate) {
+       return analyticsRepository.getTransactionValuesByBankAccountIdAndRangeDates(bankAccountId, startDate, endDate);
+    }
+
+    // Old ----------------------------------------------
 
     /**
      * Вывод суммы потраченных средств на категорию за последний месяц
