@@ -1,11 +1,11 @@
 package gigabank.controller;
 
+import gigabank.dto.TransactionAggregationRequestDTO;
 import gigabank.service.AnalyticsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
 import java.util.List;
 
 @RestController
@@ -35,11 +35,8 @@ public class AnalyticsController {
         return analyticsService.getSumTransactionsByBankAccountIdAndCategoryName(id, categoryName);
     }
 
-    @GetMapping("transaction-values-by-bank-account-id-and-range-dates/{bank-account-id}")
-    public List<BigDecimal> getSumTransactionsByBankAccountIdAndCategoryName(@PathVariable("bank-account-id") Long id,
-                                                                             @RequestParam("start-date") LocalDateTime startDate,
-                                                                             @RequestParam("end-date") LocalDateTime endDate) {
-
-        return analyticsService.getTransactionValuesByBankAccountIdAndRangeDates(id, startDate, endDate);
+    @PostMapping("/transactions/aggregate")
+    public List<BigDecimal> aggregateTransactions(@RequestBody TransactionAggregationRequestDTO request) {
+        return analyticsService.aggregateTransactions(request);
     }
 }
