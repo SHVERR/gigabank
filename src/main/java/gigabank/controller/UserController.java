@@ -5,6 +5,8 @@ import gigabank.mapper.UserMapper;
 import gigabank.service.UserService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,6 +18,7 @@ import java.util.List;
 public class UserController {
     private final UserMapper userMapper;
     private final UserService userService;
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
     @GetMapping()
     public List<UserDTO> getAll() {
@@ -32,6 +35,7 @@ public class UserController {
     @PostMapping()
     public ResponseEntity<Long> create(@RequestBody @Valid UserDTO userDTO) {
         Long userId = userService.save(userMapper.toEntity(userDTO));
+        logger.info("User ID:{} created", userId);
         return ResponseEntity.ok(userId);
     }
 

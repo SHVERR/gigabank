@@ -1,10 +1,14 @@
 package gigabank.controller;
 
 import gigabank.dto.BankAccountDTO;
+import gigabank.entity.BankAccount;
 import gigabank.mapper.BankAccountMapper;
 import gigabank.mapper.UserMapper;
 import gigabank.service.BankAccountService;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,7 +19,7 @@ import java.util.List;
 public class BankAccountController {
     private final BankAccountMapper bankAccountMapper;
     private final BankAccountService bankAccountService;
-    private final UserMapper userMapper;
+    private static final Logger logger = LoggerFactory.getLogger(BankAccountController.class);
 
     @GetMapping()
     public List<BankAccountDTO> getAll() {
@@ -43,5 +47,13 @@ public class BankAccountController {
     @DeleteMapping("/{id}")
     public void deleteById(@PathVariable("id") Long id) {
         bankAccountService.deleteById(id);
+    }
+
+    @KafkaListener(topics = "user-created-topic", groupId = "consumer-group")
+    public Long handleUserCreatedEvent(Long userId) {
+        BankAccount bankAccount = bankAccountService.saveForNewUser(userId);
+        logger.info("Bank account ID:{} created for User ID:{}", bankAccount.getId(),bankAccount.getOwner().getId());
+
+        return bankAccount.getId();
     }
 }
