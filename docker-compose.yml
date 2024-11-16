@@ -1,18 +1,9 @@
 version: "3.9"
+name: kafka-postgres_compose
 
 services:
-  gigabank_container: # Имя вашего сервиса (приложения)
-    image: gigabank # Имя образа вашего приложения
-    ports:
-      - "8080:8080" # Порты вашего приложения
-    depends_on:
-      - my_postgres_container # Зависимость от контейнера с базой данных
-    environment:
-      SPRING_DATASOURCE_URL: jdbc:postgresql://my_postgres_container:5432/dockerdb
-      SPRING_DATASOURCE_USERNAME: gigabank
-      SPRING_DATASOURCE_PASSWORD: gigabank
-
-  my_postgres_container: # Имя сервиса базы данных (совпадает с именем контейнера)
+  postgres: # Имя сервиса базы данных (совпадает с именем контейнера)
+    container_name: postgres_container
     image: postgres:latest # Или другая версия PostgreSQL
     ports:
       - "5433:5432" # Проброс портов базы данных (5433 на хосте -> 5432 в контейнере)
@@ -20,3 +11,24 @@ services:
       POSTGRES_USER: gigabank
       POSTGRES_PASSWORD: gigabank
       POSTGRES_DB: dockerdb
+
+  zookeeper:
+    container_name: zookeeper_container
+    image: wurstmeister/zookeeper:latest
+    ports:
+      - "2181:2181"
+
+  kafka:
+    image: wurstmeister/kafka:latest
+    container_name: kafka_container
+    ports:
+      - "9092:9092" # Пробрасываем порт Kafka на локальный хост
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092  # Указываем localhost для доступа извне Docker
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    depends_on:
+      - zookeeper

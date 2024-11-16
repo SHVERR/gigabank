@@ -9,6 +9,8 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -38,6 +40,24 @@ public class BankAccountService {
         }
 
         return bankAccountRepository.save(bankAccount).getId();
+    }
+
+    public BankAccount saveForNewUser(Long userId) {
+        // Проверяем, существует ли пользователь
+        final User userExists = userRepository.findById(userId).orElse(null);
+
+        if (userExists == null) {
+            throw new UserNotFoundException("User with ID " + userId + " does not exist.");
+        }
+
+        BankAccount bankAccount = new BankAccount(
+                null,
+                new BigDecimal("0.00"),
+                userExists,
+                new ArrayList<>()
+        );
+
+       return bankAccountRepository.save(bankAccount);
     }
 
     public void updateById(Long id, BankAccount bankAccount) {
